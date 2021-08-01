@@ -1,13 +1,20 @@
 import React from 'react';
 import {FaTimes} from 'react-icons/fa'
-const Task = ({task, DeleteTask}) => {
+const Task = ({task, DeleteTask, toggleRemainder}) => {
     return (
-        <div className='task'>
-            <h5>{task.text} 
-            <FaTimes onClick={() => DeleteTask(task.id)} className='' style={{color:'red', cursor: 'pointer'}} />
-            </h5>
-            <p>{task.day}</p>
-        </div>
+        <div
+        className={`task ${task.reminder && 'reminder'}`}
+        onDoubleClick={() => toggleRemainder(task.id)}
+      >
+        <h3>
+          {task.text}{' '}
+          <FaTimes
+            style={{ color: 'red', cursor: 'pointer' }}
+            onClick={() => DeleteTask(task.id)}
+          />
+        </h3>
+        <p>{task.day}</p>
+      </div>
     );
 };
 

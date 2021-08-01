@@ -29,12 +29,17 @@ const DeleteTask = (id) => {
   setTasks(tasks.filter((task)=> task.id !== id))
 }
 
+//set remainder
+const toggleRemainder = (id) => {
+  setTasks(tasks.map((task) => task.id === id ? {...task, remainder: !task.remainder} : task))
+}
+
   return (
     <div className="container">
         <Header title="Task Tracker"/>
         {
           tasks.length ?
-          <Tasks tasks={tasks} DeleteTask={DeleteTask} />
+          <Tasks tasks={tasks} DeleteTask={DeleteTask} toggleRemainder={toggleRemainder} />
           : <p style={{color:'green'}}>No Task Here</p>
         }
     </div>
