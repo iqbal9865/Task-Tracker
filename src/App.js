@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './components/Header'
 import Tasks from './components/Tasks'
+import AddTask from './components/AddTask';
 import { useState } from 'react';
 function App() {
 
@@ -23,6 +24,14 @@ function App() {
     remainder: false,
 }])
 
+//AddTask
+const addTask = (task) => {
+  const id = Math.floor(Math.random() * 10000) + 1;
+  const newTask = {id, ...task};
+  setTasks([...tasks, newTask]);
+  // console.log(id, task)
+} 
+
 
 //Delete Tasks
 const DeleteTask = (id) => {
@@ -37,10 +46,12 @@ const toggleRemainder = (id) => {
   return (
     <div className="container">
         <Header title="Task Tracker"/>
+        <AddTask addTask={addTask} />
+        <br />
         {
           tasks.length ?
           <Tasks tasks={tasks} DeleteTask={DeleteTask} toggleRemainder={toggleRemainder} />
-          : <p style={{color:'green'}}>No Task Here</p>
+          : <p style={{color:'green', marginTop: '20px'}}>No Task Here</p>
         }
     </div>
   );
