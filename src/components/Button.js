@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Button = ({ text, color, onclick }) => {
+const Button = ({ text, color, showTask }) => {
 
     return (
         <div>
-            <button onClick={onclick} style={{backgroundColor: color}} className="btn">{text}</button>
+            <button onClick={showTask} style={{backgroundColor: color}} className="btn">{text}</button>
            
         </div>
     );

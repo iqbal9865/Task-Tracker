@@ -2,39 +2,44 @@ import React from 'react';
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 function App() {
+  const [showAddTask, setShowAddTask] = useState(false)
+  const [tasks, setTasks] = useState([])
 
-  const [tasks, setTasks] = useState([{
-    id: 1,
-    text: 'Doctors Appointments',
-    day: '10 July at 02:30pm',
-    remainder: true,
-},
-{
-    id: 2,
-    text: 'Meeting At School',
-    day: '20 July at 04:30pm',
-    remainder: true,
-},
-{
-    id: 3,
-    text: 'Food Shopping',
-    day: '30 July at 01:30pm',
-    remainder: false,
-}])
+  useEffect( () => {
+    fetch('http://localhost:5000/tasks')
+    .then(res => res.json())
+    .then(data => setTasks(data))
+  }, [])
 
 //AddTask
-const addTask = (task) => {
-  const id = Math.floor(Math.random() * 10000) + 1;
-  const newTask = {id, ...task};
-  setTasks([...tasks, newTask]);
+const addTask = async (task) => {
+
+  const res = await fetch('http://localhost:5000/tasks',{
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(task),
+  })
+  const data = await res.json()
+  setTasks([...tasks, data])
+
+
+  // const id = Math.floor(Math.random() * 10000) + 1;
+  // const newTask = {id, ...task};
+  // setTasks([...tasks, newTask]);
   // console.log(id, task)
 } 
 
 
 //Delete Tasks
-const DeleteTask = (id) => {
+const DeleteTask = async (id) => {
+  await fetch(`http://localhost:5000/tasks/${id}`,{
+    method: 'DELETE'
+  });
+
   setTasks(tasks.filter((task)=> task.id !== id))
 }
 
@@ -43,10 +48,14 @@ const toggleRemainder = (id) => {
   setTasks(tasks.map((task) => task.id === id ? {...task, remainder: !task.remainder} : task))
 }
 
+const showTask = () => {
+  setShowAddTask(!showAddTask)
+}
+
   return (
     <div className="container">
-        <Header title="Task Tracker"/>
-        <AddTask addTask={addTask} />
+        <Header showTask={showTask} showAdd={showAddTask} title="Task Tracker"/>
+        {showAddTask && <AddTask addTask={addTask}  />}
         <br />
         {
           tasks.length ?
